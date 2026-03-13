@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "91415223664",
+    "project_id": "fir-firestoremvvmcrud-26689",
+    "storage_bucket": "fir-firestoremvvmcrud-26689.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91415223664:android:8c170d8719675942ef03b5",
+        "android_client_info": {
+          "package_name": "com.example.firebasefirestoremvvmcrud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEnQinQ3b4CSp1RGdXkYqobzPuuB-pfM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91415223664:android:668b9bcdf6a93f5eef03b5",
+        "android_client_info": {
+          "package_name": "com.example.mini_store"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEnQinQ3b4CSp1RGdXkYqobzPuuB-pfM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
