@@ -59,6 +59,24 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
+  Future<void> updateProfile({
+    String? displayName,
+    String? phone,
+    String? defaultAddress,
+    String? city,
+  }) async {
+    final uid = _user?.uid;
+    if (uid == null) return;
+    await _repo.updateUserProfile(
+      uid: uid,
+      displayName: displayName,
+      phone: phone,
+      defaultAddress: defaultAddress,
+      city: city,
+    );
+    await refreshProfile();
+  }
+
   Future<void> _run(Future<void> Function() fn) async {
     _loading = true;
     _error = null;

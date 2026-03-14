@@ -15,9 +15,31 @@ class CartProvider extends ChangeNotifier {
     final existing =
         _items.where((e) => e.product.id == product.id).firstOrNull;
     if (existing != null) {
+      if (product.inStock && existing.quantity >= product.stock) return;
       existing.quantity += 1;
     } else {
       _items.add(CartItem(product: product, quantity: 1));
+    }
+    notifyListeners();
+  }
+
+  void increaseQuantity(Product product) {
+    final existing =
+        _items.where((e) => e.product.id == product.id).firstOrNull;
+    if (existing == null) return;
+    if (product.inStock && existing.quantity >= product.stock) return;
+    existing.quantity += 1;
+    notifyListeners();
+  }
+
+  void decreaseQuantity(Product product) {
+    final existing =
+        _items.where((e) => e.product.id == product.id).firstOrNull;
+    if (existing == null) return;
+    if (existing.quantity <= 1) {
+      _items.removeWhere((e) => e.product.id == product.id);
+    } else {
+      existing.quantity -= 1;
     }
     notifyListeners();
   }

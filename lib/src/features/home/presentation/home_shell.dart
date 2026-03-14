@@ -6,6 +6,7 @@ import '../../admin/presentation/screens/admin_dashboard_screen.dart';
 import '../../catalog/presentation/screens/catalog_screen.dart';
 import '../../cart/presentation/screens/cart_screen.dart';
 import '../../orders/presentation/screens/order_history_screen.dart';
+import '../../profile/presentation/screens/profile_screen.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -26,6 +27,7 @@ class _HomeShellState extends State<HomeShell> {
       const CatalogScreen(),
       const CartScreen(),
       const OrderHistoryScreen(),
+      const ProfileScreen(),
       if (isAdmin) const AdminDashboardScreen(),
     ];
 
@@ -59,6 +61,10 @@ class _HomeShellState extends State<HomeShell> {
           const NavigationDestination(
             icon: Icon(Icons.receipt_long),
             label: 'Orders',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
           if (isAdmin)
             const NavigationDestination(

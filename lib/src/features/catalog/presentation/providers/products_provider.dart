@@ -22,6 +22,7 @@ class ProductsProvider extends ChangeNotifier {
 
   List<Product> get filtered {
     return _products.where((p) {
+      if (!p.isActive) return false;
       final matchesSearch =
           _search.isEmpty || p.name.toLowerCase().contains(_search.toLowerCase());
       final matchesCategory =

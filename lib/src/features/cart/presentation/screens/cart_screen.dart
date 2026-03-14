@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../orders/presentation/providers/orders_provider.dart';
 import '../providers/cart_provider.dart';
+import '../../../checkout/presentation/screens/checkout_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -13,8 +13,27 @@ class CartScreen extends StatelessWidget {
     final cart = context.watch<CartProvider>();
 
     if (cart.items.isEmpty) {
-      return const Center(
-        child: Text('Your cart is empty'),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_cart_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Your cart is empty',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add items from the shop',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[500],
+                  ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -47,7 +66,7 @@ class CartScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '${item.quantity} × \$${item.product.price.toStringAsFixed(2)}',
+                              '\$${item.product.price.toStringAsFixed(2)} each',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall,
@@ -55,17 +74,43 @@ class CartScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Text(
-                        '\$${item.lineTotal.toStringAsFixed(2)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle_outline),
+                            onPressed: () =>
+                                cart.decreaseQuantity(item.product),
+                          ),
+                          Text(
+                            '${item.quantity}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w600),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add_circle_outline),
+                            onPressed: () =>
+                                cart.increaseQuantity(item.product),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 72,
+                        child: Text(
+                          '\$${item.lineTotal.toStringAsFixed(2)}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.end,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete_outline),
-                        onPressed: () =>
-                            cart.remove(item.product),
+                        onPressed: () => cart.remove(item.product),
                       ),
                     ],
                   ),
@@ -110,28 +155,16 @@ class CartScreen extends StatelessWidget {
               SizedBox(
                 height: 48,
                 child: FilledButton(
-                  onPressed: () async {
+                  onPressed: () {
                     final auth = context.read<AuthProvider>();
-                    final userId = auth.user?.uid;
-                    if (userId == null) return;
-
-                    await context.read<OrdersProvider>().placeOrder(
-                          userId: userId,
-                          items: cart.items,
-                          total: cart.total,
-                        );
-                    cart.clear();
-
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Order placed with Cash on Delivery',
-                        ),
+                    if (auth.user == null) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CheckoutScreen(),
                       ),
                     );
                   },
-                  child: const Text('Place order (COD)'),
+                  child: const Text('Proceed to checkout'),
                 ),
               ),
             ],
@@ -141,4 +174,3 @@ class CartScreen extends StatelessWidget {
     );
   }
 }
-

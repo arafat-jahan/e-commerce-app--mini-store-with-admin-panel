@@ -66,6 +66,12 @@ class CatalogScreen extends StatelessWidget {
                           selected: products.category == 'Home',
                           onSelected: () => products.setCategory('Home'),
                         ),
+                        _CategoryChip(
+                          label: 'Accessories',
+                          selected: products.category == 'Accessories',
+                          onSelected: () =>
+                              products.setCategory('Accessories'),
+                        ),
                       ],
                     ),
                   ),
@@ -74,7 +80,21 @@ class CatalogScreen extends StatelessWidget {
             ),
             Expanded(
               child: list.isEmpty
-                  ? const Center(child: Text('No products found'))
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search_off, size: 48, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No products found',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                          ),
+                        ],
+                      ),
+                    )
                   : GridView.builder(
                       padding: const EdgeInsets.all(16),
                       gridDelegate:
@@ -169,12 +189,25 @@ class _ProductCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    '\$${product.price.toStringAsFixed(2)}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      if (!product.inStock)
+                        Text(
+                          'Out of stock',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                    ],
                   ),
                 ],
               ),
@@ -243,12 +276,16 @@ class _ProductDetailSheet extends StatelessWidget {
                   width: double.infinity,
                   height: 48,
                   child: FilledButton.icon(
-                    onPressed: () {
-                      cart.add(product);
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: product.inStock
+                        ? () {
+                            cart.add(product);
+                            Navigator.of(context).pop();
+                          }
+                        : null,
                     icon: const Icon(Icons.add_shopping_cart),
-                    label: const Text('Add to cart'),
+                    label: Text(
+                      product.inStock ? 'Add to cart' : 'Out of stock',
+                    ),
                   ),
                 ),
               ],

@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 
 import '../../../cart/domain/entities/cart_item.dart';
 import '../../data/order_repository.dart';
+import '../../domain/entities/order.dart' as order_entity;
+import '../../domain/entities/shipping_address.dart';
 
 class OrdersProvider extends ChangeNotifier {
   OrdersProvider({OrderRepository? repo})
@@ -24,12 +26,23 @@ class OrdersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> placeOrder({
+  Future<String> placeOrder({
     required String userId,
     required List<CartItem> items,
     required double total,
+    required ShippingAddress shippingAddress,
   }) {
-    return _repo.placeOrder(userId: userId, items: items, total: total);
+    return _repo.placeOrder(
+      userId: userId,
+      items: items,
+      total: total,
+      shippingAddress: shippingAddress,
+    );
   }
+
+  Future<order_entity.Order?> getOrder(String orderId) => _repo.getOrder(orderId);
+
+  Future<void> updateOrderStatus(String orderId, String status) =>
+      _repo.updateOrderStatus(orderId, status);
 }
 

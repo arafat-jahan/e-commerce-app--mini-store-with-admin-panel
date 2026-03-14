@@ -22,7 +22,31 @@ class AuthRepository {
     final doc = await _firestore.collection('users').doc(current.uid).get();
     final data = doc.data();
     final role = (data?['role'] as String?) ?? 'user';
-    return AppUser(uid: current.uid, email: current.email ?? '', role: role);
+    return AppUser(
+      uid: current.uid,
+      email: current.email ?? '',
+      role: role,
+      displayName: (data?['displayName'] as String?) ?? '',
+      phone: (data?['phone'] as String?) ?? '',
+      defaultAddress: (data?['defaultAddress'] as String?) ?? '',
+      city: (data?['city'] as String?) ?? '',
+    );
+  }
+
+  Future<void> updateUserProfile({
+    required String uid,
+    String? displayName,
+    String? phone,
+    String? defaultAddress,
+    String? city,
+  }) async {
+    final ref = _firestore.collection('users').doc(uid);
+    final Map<String, dynamic> updates = {};
+    if (displayName != null) updates['displayName'] = displayName;
+    if (phone != null) updates['phone'] = phone;
+    if (defaultAddress != null) updates['defaultAddress'] = defaultAddress;
+    if (city != null) updates['city'] = city;
+    if (updates.isNotEmpty) await ref.update(updates);
   }
 
   Future<AppUser> signIn({
