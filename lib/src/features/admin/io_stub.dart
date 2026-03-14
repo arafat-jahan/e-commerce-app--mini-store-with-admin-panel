@@ -1,4 +1,2 @@
-// Stub for dart:io when building for web (no dart:io).
-class File {
-  File(String path);
-}
+// This file exports dart:io's File class for non-web platforms.
+export 'dart:io' show File;
