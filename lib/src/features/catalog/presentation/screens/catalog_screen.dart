@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../cart/presentation/providers/cart_provider.dart';
 import '../../domain/entities/product.dart';
 import '../providers/products_provider.dart';
+import 'product_detail_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   const CatalogScreen({super.key});
@@ -58,8 +59,7 @@ class CatalogScreen extends StatelessWidget {
                         _CategoryChip(
                           label: 'Clothing',
                           selected: products.category == 'Clothing',
-                          onSelected: () =>
-                              products.setCategory('Clothing'),
+                          onSelected: () => products.setCategory('Clothing'),
                         ),
                         _CategoryChip(
                           label: 'Home',
@@ -81,35 +81,34 @@ class CatalogScreen extends StatelessWidget {
             Expanded(
               child: list.isEmpty
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.search_off, size: 48, color: Colors.grey[400]),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No products found',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : GridView.builder(
-                      padding: const EdgeInsets.all(16),
-                      gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.7,
-                      ),
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        final product = list[index];
-                        return _ProductCard(product: product);
-                      },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search_off,
+                        size: 64, color: Colors.grey[400]),
+                    const SizedBox(height: 12),
+                    Text(
+                      'No products found',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Colors.grey[600]),
                     ),
+                  ],
+                ),
+              )
+                  : GridView.builder(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.68,
+                ),
+                itemCount: list.length,
+                itemBuilder: (context, index) =>
+                    _ProductCard(product: list[index]),
+              ),
             ),
           ],
         );
@@ -133,13 +132,12 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
+      child: FilterChip(
         label: Text(label),
         selected: selected,
         onSelected: (_) => onSelected(),
-        labelStyle: TextStyle(
-          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-        ),
+        showCheckmark: false,
+        visualDensity: VisualDensity.compact,
       ),
     );
   }
@@ -152,63 +150,105 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          builder: (_) => _ProductDetailSheet(product: product),
-        );
-      },
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    final cart = context.watch<CartProvider>();
+    final cartItem =
+        cart.items.where((i) => i.product.id == product.id).firstOrNull;
+    final inCart = cartItem != null;
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProductDetailScreen(product: product),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Product image with Hero animation
             Expanded(
               child: Hero(
-                tag: 'product_${product.id}',
+                tag: 'product-${product.id}',
                 child: CachedNetworkImage(
                   imageUrl: product.imageUrl,
                   fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) =>
-                      const Icon(Icons.image_not_supported),
+                  placeholder: (_, __) => Container(
+                    color: Colors.grey[200],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (_, __, ___) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.broken_image, size: 40),
+                  ),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
+              child: Text(
+                product.name,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: Row(
                 children: [
-                  Text(
-                    product.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '\$${product.price.toStringAsFixed(2)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      '\$${product.price.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
-                      if (!product.inStock)
-                        Text(
-                          'Out of stock',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                    ],
+                    ),
                   ),
+                  // Add / qty controls
+                  if (!product.inStock)
+                    Text(
+                      'Out of stock',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(color: Colors.red),
+                    )
+                  else if (inCart)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _SmallIconBtn(
+                          icon: Icons.remove,
+                          onPressed: () =>
+                              cart.decreaseQuantity(product),
+                        ),
+                        Text(
+                          '${cartItem.quantity}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        _SmallIconBtn(
+                          icon: Icons.add,
+                          onPressed: cartItem.quantity < product.stock
+                              ? () => cart.increaseQuantity(product)
+                              : null,
+                        ),
+                      ],
+                    )
+                  else
+                    _SmallIconBtn(
+                      icon: Icons.add_shopping_cart,
+                      onPressed: () => cart.add(product),
+                    ),
                 ],
               ),
             ),
@@ -219,81 +259,25 @@ class _ProductCard extends StatelessWidget {
   }
 }
 
-class _ProductDetailSheet extends StatelessWidget {
-  const _ProductDetailSheet({required this.product});
-
-  final Product product;
+class _SmallIconBtn extends StatelessWidget {
+  const _SmallIconBtn({required this.icon, this.onPressed});
+  final IconData icon;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    final cart = context.watch<CartProvider>();
-
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.7,
-      builder: (context, controller) {
-        return SingleChildScrollView(
-          controller: controller,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Hero(
-                    tag: 'product_${product.id}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: CachedNetworkImage(
-                        imageUrl: product.imageUrl,
-                        height: 220,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  product.name,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '\$${product.price.toStringAsFixed(2)}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  product.description,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: FilledButton.icon(
-                    onPressed: product.inStock
-                        ? () {
-                            cart.add(product);
-                            Navigator.of(context).pop();
-                          }
-                        : null,
-                    icon: const Icon(Icons.add_shopping_cart),
-                    label: Text(
-                      product.inStock ? 'Add to cart' : 'Out of stock',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: IconButton(
+        icon: Icon(icon, size: 16),
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+      ),
     );
   }
 }
 
+extension _FirstOrNull<E> on Iterable<E> {
+  E? get firstOrNull => isEmpty ? null : first;
+}

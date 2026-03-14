@@ -8,26 +8,40 @@ import '../../domain/entities/app_user.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider({AuthRepository? repo}) : _repo = repo ?? AuthRepository() {
-    _sub = _repo.authStateChanges().listen((_) async {
-      await refreshProfile();
-    });
-    refreshProfile();
+    // Resolve current user once on startup before listening for changes.
+    _initialLoad();
   }
 
   final AuthRepository _repo;
-  late final Stream<User?> _authStream = _repo.authStateChanges();
-  Stream<User?> get authStream => _authStream;
+  StreamSubscription<User?>? _sub;
 
   AppUser? _user;
   AppUser? get user => _user;
 
-  bool _loading = false;
+  /// True only during the very first auth-state resolution.
+  /// AuthGate uses this to show a splash instead of LoginScreen.
+  bool _loading = true;
   bool get loading => _loading;
 
   String? _error;
   String? get error => _error;
 
-  late final StreamSubscription<User?> _sub;
+  Future<void> _initialLoad() async {
+    _error = null;
+    try {
+      _user = await _repo.getCurrentAppUser();
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+
+    // Now subscribe to ongoing auth-state changes (sign-in / sign-out).
+    _sub = _repo.authStateChanges().listen((_) async {
+      await refreshProfile();
+    });
+  }
 
   Future<void> refreshProfile() async {
     _error = null;
@@ -93,8 +107,7 @@ class AuthProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    _sub.cancel();
+    _sub?.cancel();
     super.dispose();
   }
 }
-

@@ -15,20 +15,28 @@ class OrderHistoryScreen extends StatefulWidget {
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
+  bool _initialized = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final auth = context.read<AuthProvider>();
-    final userId = auth.user?.uid;
-    if (userId != null) {
-      context.read<OrdersProvider>().listenForUser(userId);
+    if (!_initialized) {
+      _initialized = true;
+      final userId = context.read<AuthProvider>().user?.uid;
+      if (userId != null) {
+        // Use addPostFrameCallback to avoid setState during build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            context.read<OrdersProvider>().listenForUser(userId);
+          }
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = context.watch<OrdersProvider>();
-    final stream = ordersProvider.ordersStream;
+    final stream = context.watch<OrdersProvider>().ordersStream;
 
     if (stream == null) {
       return const Center(child: CircularProgressIndicator());
@@ -57,8 +65,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             final formatted = created == null
                 ? ''
                 : DateFormat.yMMMd().add_jm().format(created);
-
             final orderId = docs[index].id;
+
             return Card(
               margin: const EdgeInsets.only(bottom: 8),
               child: InkWell(
@@ -82,16 +90,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           children: [
                             Text(
                               'Order #${orderId.length >= 6 ? orderId.substring(0, 6) : orderId}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               formatted,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall,
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
@@ -142,4 +146,3 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     );
   }
 }
-

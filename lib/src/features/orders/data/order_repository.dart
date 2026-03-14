@@ -20,12 +20,12 @@ class OrderRepository {
       'userId': userId,
       'items': items
           .map((e) => {
-                'productId': e.product.id,
-                'name': e.product.name,
-                'price': e.product.price,
-                'imageUrl': e.product.imageUrl,
-                'quantity': e.quantity,
-              })
+        'productId': e.product.id,
+        'name': e.product.name,
+        'price': e.product.price,
+        'imageUrl': e.product.imageUrl,
+        'quantity': e.quantity,
+      })
           .toList(),
       'total': total,
       'status': 'pending',
@@ -64,31 +64,22 @@ class OrderRepository {
     });
   }
 
-  static order_entity.Order orderFromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+  /// Public helper used by other layers (e.g. admin) to parse a Firestore doc.
+  static order_entity.Order orderFromDoc(
+      DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? {};
-    final id = doc.id;
-    final items = (data['items'] as List<dynamic>?)
-            ?.map((e) => order_entity.OrderItem.fromMap(Map<String, dynamic>.from(e as Map)))
-            .toList() ??
-        <order_entity.OrderItem>[];
-    final ts = data['createdAt'] as Timestamp?;
-    return order_entity.Order(
-      id: id,
-      userId: data['userId'] as String? ?? '',
-      items: items,
-      total: (data['total'] as num?)?.toDouble() ?? 0,
-      createdAt: ts?.toDate() ?? DateTime.now(),
-      status: data['status'] as String? ?? 'pending',
-      shippingAddress: ShippingAddress.fromMap(
-        data['shippingAddress'] as Map<String, dynamic>?,
-      ),
-    );
+    return _parse(doc.id, data);
   }
 
   order_entity.Order _orderFromDoc(String id, Map<String, dynamic> data) {
+    return _parse(id, data);
+  }
+
+  static order_entity.Order _parse(String id, Map<String, dynamic> data) {
     final items = (data['items'] as List<dynamic>?)
-            ?.map((e) => order_entity.OrderItem.fromMap(Map<String, dynamic>.from(e as Map)))
-            .toList() ??
+        ?.map((e) => order_entity.OrderItem.fromMap(
+        Map<String, dynamic>.from(e as Map)))
+        .toList() ??
         <order_entity.OrderItem>[];
     final ts = data['createdAt'] as Timestamp?;
     return order_entity.Order(
