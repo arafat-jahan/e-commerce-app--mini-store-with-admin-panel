@@ -13,13 +13,10 @@ class MiniStoreApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Force dark status bar icons on light backgrounds
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    ));
 
     return MultiProvider(
       providers: [
@@ -38,206 +35,90 @@ class MiniStoreApp extends StatelessWidget {
   }
 
   ThemeData _buildTheme() {
-    const Color primary = Color(0xFF2563EB);       // Rich blue
-    const Color primaryLight = Color(0xFF3B82F6);
-    const Color primaryDark = Color(0xFF1D4ED8);
-    const Color surface = Color(0xFF0F0F13);       // Near black
-    const Color surfaceCard = Color(0xFF1A1A24);   // Dark card
-    const Color surfaceElevated = Color(0xFF22222F); // Elevated card
-    const Color gold = Color(0xFFD4AF37);           // Gold accent
-    const Color textPrimary = Color(0xFFF5F5F7);
-    const Color textSecondary = Color(0xFF9CA3AF);
-    const Color border = Color(0xFF2A2A3A);
+    const bg = Color(0xFF080B14);
+    const surface = Color(0xFF0F1420);
+    const card = Color(0xFF141925);
+    const cardElevated = Color(0xFF1C2235);
+    const primary = Color(0xFF3B82F6);
+    const primaryDark = Color(0xFF2563EB);
+    const gold = Color(0xFFD4AF37);
+    const textPrimary = Color(0xFFF1F5F9);
+    const textSecondary = Color(0xFF64748B);
+    const border = Color(0xFF1E293B);
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: const ColorScheme.dark(
         primary: primary,
-        primaryContainer: primaryDark,
         secondary: gold,
-        surface: surface,
-        surfaceContainerHighest: surfaceElevated,
+        surface: bg,
+        surfaceContainerHighest: cardElevated,
         onPrimary: Colors.white,
         onSurface: textPrimary,
         outline: border,
       ),
-      scaffoldBackgroundColor: surface,
-
-      // AppBar
+      scaffoldBackgroundColor: bg,
       appBarTheme: const AppBarTheme(
         elevation: 0,
-        centerTitle: false,
-        backgroundColor: surface,
+        backgroundColor: bg,
         foregroundColor: textPrimary,
         surfaceTintColor: Colors.transparent,
-        titleTextStyle: TextStyle(
-          color: textPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.5,
-        ),
-        iconTheme: IconThemeData(color: textPrimary),
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
+        titleTextStyle: TextStyle(color: textPrimary, fontSize: 20, fontWeight: FontWeight.w700, letterSpacing: -0.5),
+        systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.light),
       ),
-
-      // Cards
       cardTheme: CardThemeData(
-        color: surfaceCard,
+        color: card,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: border, width: 1),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18), side: const BorderSide(color: border)),
         clipBehavior: Clip.antiAlias,
       ),
-
-      // Input fields
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceCard,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: border),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: primary, width: 1.5),
-        ),
+        fillColor: card,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: border)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: primary, width: 1.5)),
         hintStyle: const TextStyle(color: textSecondary, fontSize: 15),
         labelStyle: const TextStyle(color: textSecondary),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         prefixIconColor: textSecondary,
       ),
-
-      // Filled buttons
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: primary,
           foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.3,
-          ),
+          minimumSize: const Size(double.infinity, 54),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, letterSpacing: 0.3),
           elevation: 0,
         ),
       ),
-
-      // Outlined buttons
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: primary,
-          side: const BorderSide(color: primary),
-          minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-
-      // Text buttons
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: primary,
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-
-      // Bottom navigation
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: surfaceCard,
+        backgroundColor: card,
         elevation: 0,
-        indicatorColor: primary.withValues(alpha: 0.2),
+        indicatorColor: primary.withValues(alpha: 0.15),
         iconTheme: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: primary, size: 24);
-          }
+          if (states.contains(WidgetState.selected)) return const IconThemeData(color: primary, size: 24);
           return const IconThemeData(color: textSecondary, size: 22);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
-            return const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              color: primary,
-            );
-          }
-          return const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: textSecondary,
-          );
+          if (states.contains(WidgetState.selected)) return const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: primary);
+          return const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: textSecondary);
         }),
         surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.black,
       ),
-
-      // Chips
-      chipTheme: ChipThemeData(
-        backgroundColor: surfaceCard,
-        selectedColor: primary.withValues(alpha: 0.2),
-        side: const BorderSide(color: border),
-        labelStyle: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: textSecondary,
-        ),
-        secondaryLabelStyle: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: primary,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-      ),
-
-      // Snackbar
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: surfaceElevated,
+        backgroundColor: cardElevated,
         contentTextStyle: const TextStyle(color: textPrimary),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: border),
-        ),
-        elevation: 8,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: const BorderSide(color: border)),
       ),
-
-      // Divider
-      dividerTheme: const DividerThemeData(
-        color: border,
-        thickness: 1,
-        space: 1,
-      ),
-
-      // Text theme
+      dividerTheme: const DividerThemeData(color: border, thickness: 1, space: 1),
       textTheme: const TextTheme(
         displayLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.w800, letterSpacing: -1.5),
         displayMedium: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, letterSpacing: -1.0),
-        headlineLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, letterSpacing: -0.5),
-        headlineMedium: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
-        headlineSmall: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
+        headlineLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.w700),
         titleLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, letterSpacing: -0.3),
         titleMedium: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
         titleSmall: TextStyle(color: textSecondary, fontWeight: FontWeight.w500),
@@ -245,12 +126,7 @@ class MiniStoreApp extends StatelessWidget {
         bodyMedium: TextStyle(color: textPrimary, fontSize: 14),
         bodySmall: TextStyle(color: textSecondary, fontSize: 12),
         labelLarge: TextStyle(color: textPrimary, fontWeight: FontWeight.w600),
-        labelSmall: TextStyle(color: textSecondary, fontSize: 11),
       ),
-
-      // Icon theme
-      iconTheme: const IconThemeData(color: textSecondary),
-      primaryIconTheme: const IconThemeData(color: primary),
     );
   }
 }
