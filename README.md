@@ -20,26 +20,26 @@
 ### Shopping
 | Shop | Search | Product Detail |
 |:----:|:------:|:--------------:|
-| <img src="screenshots/03_shop.jpg" width="180"/> | <img src="screenshots/04_search.jpg" width="180"/> | <img src="screenshots/05_product_detail.jpg" width="180"/> |
+| <img src="https://i.imgur.com/RpXHG2J.jpeg" width="180"/> | <img src="https://i.imgur.com/HPpq4Ra.jpeg" width="180"/> | <img src="https://i.imgur.com/7JpPuu9.jpeg" width="180"/> |
 
 ### Ordering
 | Cart | Checkout | Orders |
 |:----:|:--------:|:------:|
-| <img src="screenshots/06_cart.jpg" width="180"/> | <img src="screenshots/07_checkout.jpg" width="180"/> | <img src="screenshots/08_orders.jpg" width="180"/> |
+| <img src="https://i.imgur.com/AFylWpT.jpeg" width="180"/> | <img src="https://i.imgur.com/N6mwWta.jpeg" width="180"/> | <img src="https://i.imgur.com/Hf7uIAA.jpeg" width="180"/> |
 
 ### Account
 | Order Detail | Profile |
 |:------------:|:-------:|
-| <img src="screenshots/09_order_detail.jpg" width="220"/> | <img src="screenshots/10_profile.jpg" width="220"/> |
+| <img src="https://i.imgur.com/FBxo89k.jpeg" width="220"/> | <img src="https://i.imgur.com/wyw2QIr.jpeg" width="220"/> |
 
 ### Admin Dashboard
 | Dashboard | Products | Add Product |
 |:---------:|:--------:|:-----------:|
-| <img src="screenshots/11_admin_dashboard.jpg" width="180"/> | <img src="screenshots/12_admin_products.jpg" width="180"/> | <img src="screenshots/13_admin_add_product.jpg" width="180"/> |
+| <img src="https://i.imgur.com/CElZtU8.jpeg" width="180"/> | <img src="https://i.imgur.com/NCyZsTc.jpeg" width="180"/> | <img src="https://i.imgur.com/2EQ7kCB.jpeg" width="180"/> |
 
 | Orders | Order Detail | Users |
 |:------:|:------------:|:-----:|
-| <img src="screenshots/14_admin_orders.jpg" width="180"/> | <img src="screenshots/15_admin_order_detail.jpg" width="180"/> | <img src="screenshots/16_admin_users.jpg" width="180"/> |
+| <img src="blob:https://imgur.com/fd91e931-6b9e-4b09-a119-aa4db3177dd4" width="180"/> | <img src="[screenshots/15_admin_order_detail.jpg](https://i.imgur.com/oyM70VB.jpeg" width="180"/> | <img src="https://i.imgur.com/rQfHQ1j.jpeg" width="180"/> |
 
 ---
 
