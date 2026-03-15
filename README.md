@@ -1,48 +1,75 @@
 # 🛍️ Mini Store
 
-A full-featured **e-commerce mobile app** built with Flutter & Firebase — production-ready with a premium dark UI, smooth animations, and complete admin dashboard.
+> A production-ready **Flutter e-commerce app** powered by Firebase — featuring a premium dark UI, smooth animations, real-time data, and a full admin dashboard.
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-lightgrey?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+---
+
+## 📱 Screenshots
+
+### Authentication
+| Login | Register |
+|:-----:|:--------:|
+| <img src="screenshots/01_login.jpg" width="220"/> | <img src="screenshots/02_register.jpg" width="220"/> |
+
+### Shopping
+| Shop | Search | Product Detail |
+|:----:|:------:|:--------------:|
+| <img src="screenshots/03_shop.jpg" width="180"/> | <img src="screenshots/04_search.jpg" width="180"/> | <img src="screenshots/05_product_detail.jpg" width="180"/> |
+
+### Ordering
+| Cart | Checkout | Orders |
+|:----:|:--------:|:------:|
+| <img src="screenshots/06_cart.jpg" width="180"/> | <img src="screenshots/07_checkout.jpg" width="180"/> | <img src="screenshots/08_orders.jpg" width="180"/> |
+
+### Account
+| Order Detail | Profile |
+|:------------:|:-------:|
+| <img src="screenshots/09_order_detail.jpg" width="220"/> | <img src="screenshots/10_profile.jpg" width="220"/> |
+
+### Admin Dashboard
+| Dashboard | Products | Add Product |
+|:---------:|:--------:|:-----------:|
+| <img src="screenshots/11_admin_dashboard.jpg" width="180"/> | <img src="screenshots/12_admin_products.jpg" width="180"/> | <img src="screenshots/13_admin_add_product.jpg" width="180"/> |
+
+| Orders | Order Detail | Users |
+|:------:|:------------:|:-----:|
+| <img src="screenshots/14_admin_orders.jpg" width="180"/> | <img src="screenshots/15_admin_order_detail.jpg" width="180"/> | <img src="screenshots/16_admin_users.jpg" width="180"/> |
 
 ---
 
 ## ✨ Features
 
-### 🛒 Customer Side
-- **Browse Products** — Search, filter by category, view stock status
-- **Product Detail** — Hero image, price counter animation, add to cart
-- **Shopping Cart** — Quantity controls, item slide animations, order total
-- **Checkout** — Shipping address form, Cash on Delivery (COD)
-- **Order History** — Real-time order tracking with status badges
-- **Profile** — Update name, phone, address, city
+### 🛒 Customer
+- Browse products with search & category filter
+- Product detail with hero animation & price counter
+- Shopping cart with quantity controls
+- Checkout with Cash on Delivery (COD)
+- Real-time order tracking with status badges
+- User profile management
 
-### 🔐 Authentication
-- Email & Password Sign Up / Sign In
-- Role-based access (Admin / Customer)
-- Persistent login session
+### 👑 Admin
+- Dashboard — orders, products, revenue, pending count
+- Products — add, edit, delete with image upload to Firebase Storage
+- Orders — view all orders, update status (pending → confirmed → shipped → delivered)
+- Users — manage roles (admin / customer)
 
-### 👑 Admin Dashboard
-- **Dashboard** — Total orders, products, revenue, pending count
-- **Products** — Add, edit, delete products with image upload
-- **Orders** — View all orders, update status (pending → confirmed → shipped → delivered)
-- **Users** — View all users, promote/demote to admin
-
----
-
-## 🎨 UI Highlights
-
-- **Premium Dark Theme** — Deep navy/black with blue accent
-- **Glassmorphism** — Frosted glass input fields and cards
-- **Glow Effects** — Blue glow on buttons and interactive elements
-- **Radial Gradient Backgrounds** — Rich depth on login and splash
-- **Staggered Animations** — Product cards appear one by one
-- **Micro-interactions** — Every button has scale feedback
-- **Hero Transitions** — Smooth image zoom between screens
-- **Animated Price Counter** — Numbers count up on product detail
-- **Add to Cart Feedback** — Button turns green with checkmark ✅
+### 🎨 UI & Animations
+- Premium dark theme with blue accent
+- Glassmorphism input fields
+- Glow buttons with shadow effects
+- Radial gradient backgrounds
+- Staggered product card animations
+- Hero image transitions
+- Price counter animation on product detail
+- Add to cart color feedback (blue → green ✅)
+- Animated splash screen with pulsing logo
+- Smooth page transitions throughout
 
 ---
 
@@ -53,48 +80,34 @@ lib/
 ├── main.dart
 ├── firebase_options.dart
 └── src/
-    ├── app.dart                    # App theme & providers
+    ├── app.dart
     └── features/
-        ├── auth/                   # Login, Register, Auth Gate
-        │   ├── data/               # AuthRepository (Firebase)
-        │   ├── domain/             # AppUser entity
-        │   └── presentation/       # Screens + AuthProvider
-        ├── catalog/                # Product browsing
-        │   ├── data/               # ProductRepository
-        │   ├── domain/             # Product entity
-        │   └── presentation/       # CatalogScreen, ProductDetailScreen
-        ├── cart/                   # Shopping cart
-        │   ├── domain/             # CartItem entity
-        │   └── presentation/       # CartScreen, CartProvider
-        ├── checkout/               # Order placement
-        │   └── presentation/       # CheckoutScreen
-        ├── orders/                 # Order management
-        │   ├── data/               # OrderRepository
-        │   ├── domain/             # Order, ShippingAddress entities
-        │   └── presentation/       # OrderHistoryScreen, OrderDetailScreen
-        ├── profile/                # User profile
-        │   └── presentation/       # ProfileScreen
-        ├── admin/                  # Admin dashboard
-        │   └── presentation/       # AdminDashboardScreen
-        └── home/                   # Navigation shell
-            └── presentation/       # HomeShell
+        ├── auth/          # Login · Register · Auth Gate
+        ├── catalog/       # Shop · Product Detail
+        ├── cart/          # Cart screen
+        ├── checkout/      # Checkout screen
+        ├── orders/        # Order history & detail
+        ├── profile/       # User profile
+        ├── admin/         # Admin dashboard
+        └── home/          # Navigation shell
 ```
 
-**Pattern:** Feature-first architecture with Provider state management.
+**Pattern:** Feature-first · Provider state management · Repository pattern
 
 ---
 
 ## 🔥 Firebase Setup
 
-### Collections
+### Firestore Collections
 
-| Collection | Description |
-|------------|-------------|
-| `users` | User profiles with `role` field (`user` / `admin`) |
-| `products` | Product catalog |
-| `orders` | Customer orders |
+| Collection | Fields |
+|------------|--------|
+| `users` | `email`, `role`, `displayName`, `phone`, `city`, `defaultAddress` |
+| `products` | `name`, `price`, `category`, `stock`, `imageUrl`, `description`, `isActive` |
+| `orders` | `userId`, `items`, `total`, `status`, `shippingAddress`, `createdAt`, `cod` |
 
-### Firestore Security Rules
+### Security Rules
+
 ```javascript
 rules_version = '2';
 service cloud.firestore {
@@ -104,18 +117,15 @@ service cloud.firestore {
       return isSignedIn() &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
-
     match /users/{userId} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth.uid == userId;
       allow update: if request.auth.uid == userId || isAdmin();
     }
-
     match /products/{productId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-
     match /orders/{orderId} {
       allow read: if isSignedIn() &&
         (resource.data.userId == request.auth.uid || isAdmin());
@@ -127,12 +137,14 @@ service cloud.firestore {
 }
 ```
 
-### Required Firestore Index
-Orders screen requires a composite index. Create it here:
+### Required Composite Index
 
-> Firestore → Indexes → Add composite index:
-> - Collection: `orders`
-> - Fields: `userId` (Ascending), `createdAt` (Descending)
+```
+Collection : orders
+Fields     : userId (Ascending), createdAt (Descending)
+```
+
+> Firebase Console → Firestore → Indexes → Add composite index
 
 ---
 
@@ -140,31 +152,26 @@ Orders screen requires a composite index. Create it here:
 
 ### Prerequisites
 - Flutter SDK `^3.x`
-- Dart SDK `^3.x`
 - Firebase project with Firestore & Authentication enabled
 
 ### Installation
 
 ```bash
-# Clone the repo
+# Clone
 git clone https://github.com/your-username/mini_store.git
 cd mini_store
 
 # Install dependencies
 flutter pub get
 
-# Run the app
+# Run
 flutter run
 ```
 
 ### Firebase Configuration
-The `lib/firebase_options.dart` file is auto-generated by FlutterFire CLI. To set up your own Firebase:
 
 ```bash
-# Install FlutterFire CLI
 dart pub global activate flutterfire_cli
-
-# Configure
 flutterfire configure
 ```
 
@@ -172,64 +179,46 @@ flutterfire configure
 
 ## 📦 Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `provider` | ^6.1.2 | State management |
-| `firebase_core` | ^4.5.0 | Firebase initialization |
-| `firebase_auth` | ^6.2.0 | Authentication |
-| `cloud_firestore` | ^6.1.3 | Database |
-| `firebase_storage` | ^13.1.0 | Image storage |
-| `cached_network_image` | ^3.4.1 | Image caching |
-| `image_picker` | ^1.1.2 | Pick images from gallery |
-| `intl` | ^0.20.2 | Date formatting |
-| `uuid` | ^4.5.1 | Generate unique IDs |
+| Package | Purpose |
+|---------|---------|
+| `provider` | State management |
+| `firebase_core` | Firebase init |
+| `firebase_auth` | Authentication |
+| `cloud_firestore` | Database |
+| `firebase_storage` | Image storage |
+| `cached_network_image` | Image caching |
+| `image_picker` | Gallery picker |
+| `intl` | Date formatting |
+| `uuid` | Unique IDs |
 
 ---
 
 ## 👤 Admin Setup
 
-1. Register a new account in the app
+1. Register an account in the app
 2. Go to **Firebase Console → Firestore → users**
-3. Find your user document
-4. Change `role` from `"user"` to `"admin"`
-5. Sign out and sign back in
-6. **Admin tab** will appear in the bottom navigation
+3. Find your document → change `role` to `"admin"`
+4. Sign out → sign back in
+5. **Admin tab** appears in bottom navigation ✅
 
 ---
 
-## 📱 Screenshots
+## 🗂️ Seed Products
 
-| Splash | Login | Shop |
-|--------|-------|------|
-| Animated logo with glow | Staggered field animations | Staggered product grid |
-
-| Product Detail | Cart | Orders |
-|----------------|------|--------|
-| Hero image + price counter | Slide animations | Status tracking |
-
----
-
-## 🗂️ Product Seeding
-
-To quickly populate the database with 30 sample products:
+Populate Firestore with 30 sample products:
 
 ```bash
 flutter run -t lib/seed_products.dart
 ```
 
-This adds products across 4 categories: Electronics, Clothing, Home, Accessories.
+Categories: `Electronics` · `Clothing` · `Home` · `Accessories`
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License — free to use, modify, and distribute.
 
 ---
 
-## 🙏 Acknowledgements
-
-- [Flutter](https://flutter.dev)
-- [Firebase](https://firebase.google.com)
-- [Unsplash](https://unsplash.com) — Product images
-- [Material Design 3](https://m3.material.io)
+<p align="center">Built with ❤️ using Flutter & Firebase</p>
