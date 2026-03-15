@@ -15,7 +15,7 @@
 ### Authentication
 | Login | Register |
 |:-----:|:--------:|
-| <img src="screenshots/01_login.jpg" width="220"/> | <img src="[screenshots/02_register.jpg](https://imgur.com/a/B3TtCoc)" width="220"/> |
+| <img src="screenshots/01_login.jpg" width="220"/> | <img src="https://imgur.com/a/B3TtCoc" width="220"/> |
 
 ### Shopping
 | Shop | Search | Product Detail |
