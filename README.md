@@ -1,6 +1,6 @@
 # 🛍️ Mini Store
 
-> A production-ready **Flutter e-commerce app** powered by Firebase — featuring a premium dark UI, smooth animations, real-time data, and a full admin dashboard.
+> A**Flutter e-commerce app** powered by Firebase — featuring a premium dark UI, smooth animations, real-time data, and a full admin dashboard.
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
@@ -39,7 +39,7 @@
 
 | Orders | Order Detail | Users |
 |:------:|:------------:|:-----:|
-| <img src="blob:https://imgur.com/fd91e931-6b9e-4b09-a119-aa4db3177dd4" width="180"/> | <img src="[screenshots/15_admin_order_detail.jpg](https://i.imgur.com/oyM70VB.jpeg" width="180"/> | <img src="https://i.imgur.com/rQfHQ1j.jpeg" width="180"/> |
+| <img src="https://i.imgur.com/4FCLWoT.jpeg" width="180"/> | <img src="https://i.imgur.com/czQ0WD3.jpeg" width="180"/> | <img src="https://i.imgur.com/rQfHQ1j.jpeg" width="180"/> |
 
 ---
 
