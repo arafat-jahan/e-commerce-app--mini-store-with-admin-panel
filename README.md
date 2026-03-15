@@ -13,9 +13,9 @@
 ## 📱 Screenshots
 
 ### Authentication
-| Login | Register |
+|  Register | Login |
 |:-----:|:--------:|
-| <img src="https://i.imgur.com/q237rNa.jpeg" width="220"/> | <img src="https://imgur.com/a/B3TtCoc" width="220"/> |
+| <img src="https://i.imgur.com/q237rNa.jpeg" width="220"/> | <img src="https://i.imgur.com/Oo37kvS.jpeg" width="220"/> |
 
 ### Shopping
 | Shop | Search | Product Detail |
