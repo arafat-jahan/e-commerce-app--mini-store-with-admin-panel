@@ -24,13 +24,28 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       _initialized = true;
       final userId = context.read<AuthProvider>().user?.uid;
       if (userId != null) {
-        // Use addPostFrameCallback to avoid setState during build
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            context.read<OrdersProvider>().listenForUser(userId);
-          }
+          if (mounted) context.read<OrdersProvider>().listenForUser(userId);
         });
       }
+    }
+  }
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'delivered': return Colors.green;
+      case 'shipped': return const Color(0xFF2563EB);
+      case 'confirmed': return const Color(0xFFD4AF37);
+      default: return const Color(0xFF9CA3AF);
+    }
+  }
+
+  IconData _statusIcon(String status) {
+    switch (status) {
+      case 'delivered': return Icons.check_circle_rounded;
+      case 'shipped': return Icons.local_shipping_rounded;
+      case 'confirmed': return Icons.thumb_up_rounded;
+      default: return Icons.hourglass_empty_rounded;
     }
   }
 
@@ -39,22 +54,41 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     final stream = context.watch<OrdersProvider>().ordersStream;
 
     if (stream == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: Color(0xFF2563EB)));
     }
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Color(0xFF2563EB)));
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No orders yet'));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100, height: 100,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A24),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xFF2A2A3A)),
+                  ),
+                  child: const Icon(Icons.receipt_long_rounded, size: 44, color: Color(0xFF4B5563)),
+                ),
+                const SizedBox(height: 20),
+                const Text('No orders yet', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                const Text('Your order history will appear here', style: TextStyle(color: Color(0xFF6B7280), fontSize: 14)),
+              ],
+            ),
+          );
         }
-        final docs = snapshot.data!.docs;
 
+        final docs = snapshot.data!.docs;
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+          padding: const EdgeInsets.all(16),
           itemCount: docs.length,
           itemBuilder: (context, index) {
             final data = docs[index].data();
@@ -62,81 +96,86 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             final status = data['status'] as String? ?? 'pending';
             final ts = data['createdAt'] as Timestamp?;
             final created = ts?.toDate();
-            final formatted = created == null
-                ? ''
-                : DateFormat.yMMMd().add_jm().format(created);
+            final formatted = created == null ? '' : DateFormat.yMMMd().add_jm().format(created);
             final orderId = docs[index].id;
+            final itemCount = (data['items'] as List?)?.length ?? 0;
 
-            return Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => OrderDetailScreen(orderId: orderId),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            return GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => OrderDetailScreen(orderId: orderId)),
+              ),
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A24),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF2A2A3A)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 44, height: 44,
+                          decoration: BoxDecoration(
+                            color: _statusColor(status).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(_statusIcon(status), color: _statusColor(status), size: 22),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  'Order #${orderId.length >= 8 ? orderId.substring(0, 8).toUpperCase() : orderId.toUpperCase()}',
+                                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                              const SizedBox(height: 2),
+                              Text(formatted, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              'Order #${orderId.length >= 6 ? orderId.substring(0, 6) : orderId}',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
+                            Text('\$${total.toStringAsFixed(2)}',
+                                style: const TextStyle(color: Color(0xFF2563EB), fontSize: 16, fontWeight: FontWeight.w800)),
                             const SizedBox(height: 4),
-                            Text(
-                              formatted,
-                              style: Theme.of(context).textTheme.bodySmall,
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: _statusColor(status).withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                  status.toUpperCase(),
+                                  style: TextStyle(color: _statusColor(status), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.8)),
                             ),
                           ],
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      ],
+                    ),
+                    if (itemCount > 0) ...[
+                      const SizedBox(height: 12),
+                      const Divider(color: Color(0xFF2A2A3A), height: 1),
+                      const SizedBox(height: 12),
+                      Row(
                         children: [
-                          Text(
-                            '\$${total.toStringAsFixed(2)}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: status == 'pending'
-                                  ? Colors.orange.withValues(alpha: 0.12)
-                                  : Colors.green.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(
-                              status,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: status == 'pending'
-                                    ? Colors.orange[800]
-                                    : Colors.green[800],
-                              ),
-                            ),
-                          ),
+                          const Icon(Icons.inventory_2_outlined, size: 14, color: Color(0xFF6B7280)),
+                          const SizedBox(width: 6),
+                          Text('$itemCount item${itemCount > 1 ? 's' : ''}',
+                              style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13)),
+                          const Spacer(),
+                          const Text('View details',
+                              style: TextStyle(color: Color(0xFF2563EB), fontSize: 13, fontWeight: FontWeight.w600)),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Color(0xFF2563EB)),
                         ],
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ),
             );

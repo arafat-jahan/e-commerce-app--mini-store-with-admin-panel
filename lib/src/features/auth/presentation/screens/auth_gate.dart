@@ -12,12 +12,35 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
 
-    // Show a splash/loader while Firebase is still resolving the auth state.
-    // Without this the user sees LoginScreen for a brief flash on every cold
-    // start even when they are already signed in.
     if (auth.loading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        backgroundColor: Color(0xFF0F0F13),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo
+              SizedBox(
+                width: 64, height: 64,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)]),
+                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                  ),
+                  child: Icon(Icons.storefront_rounded, color: Colors.white, size: 32),
+                ),
+              ),
+              SizedBox(height: 32),
+              SizedBox(
+                width: 24, height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: Color(0xFF2563EB),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
