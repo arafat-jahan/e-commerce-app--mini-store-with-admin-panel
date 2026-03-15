@@ -1,6 +1,6 @@
 # 🛍️ Mini Store
 
-> A**Flutter e-commerce app** powered by Firebase — featuring a premium dark UI, smooth animations, real-time data, and a full admin dashboard.
+> **Flutter e-commerce app** powered by Firebase — featuring a premium dark UI, smooth animations, real-time data, and a full admin dashboard.
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
